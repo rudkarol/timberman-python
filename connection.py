@@ -1,45 +1,30 @@
 import httpx
 from pydantic import BaseModel
-from typing import List
+
+BASE_URL = "http://127.0.0.1:8000"
 
 
 class ScoreItem(BaseModel):
-    id: str
+    id: int
     score: int
     username: str
 
+
 class ApiResponse(BaseModel):
-    items: List[ScoreItem]
+    items: list[ScoreItem]
 
 
-BASE_URL = "http://127.0.0.1:8090"
-
-
-def get_user_max_scores(nickname: str):
-    url = f"{BASE_URL}/api/collections/max_scores/records"
-    params = {
-        "filter": f"username='{nickname}'"
-    }
-
-    r = httpx.get(url, params=params)
+def get_user_max_scores(nickname: str) -> ApiResponse:
+    r = httpx.get(f"{BASE_URL}/api/scores", params={"username": nickname})
     r.raise_for_status()
+    return ApiResponse(**r.json())
 
-    json = r.json()
-    return ApiResponse(**json)
 
 def create_user(nickname: str, score: int):
-    url = f"{BASE_URL}/api/collections/max_scores/records"
-    payload = {
-        "username": nickname,
-        "score": score
-    }
-
-    r = httpx.post(url, data=payload)
+    r = httpx.post(f"{BASE_URL}/api/scores", json={"username": nickname, "score": score})
     r.raise_for_status()
 
-def update_user_max_scores(id: str, new_score: int):
-    url = f"{BASE_URL}/api/collections/max_scores/records/{id}"
-    payload = {"score": new_score}
 
-    r = httpx.patch(url, json=payload)
+def update_user_max_scores(id: int, new_score: int):
+    r = httpx.patch(f"{BASE_URL}/api/scores/{id}", json={"score": new_score})
     r.raise_for_status()
