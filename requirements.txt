@@ -1,3 +1,5 @@
-pygame
-httpx
-pydantic
+fastapi==0.136.3
+httpx==0.28.1
+pydantic==2.13.4
+pygame==2.6.1
+SQLAlchemy==2.0.50
