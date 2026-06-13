@@ -36,7 +36,7 @@ class ScoresListResponse(BaseModel):
     items: list[ScoreResponse]
 
 
-app = FastAPI(title="Timberman Scores API")
+app = FastAPI(title="Timberman API")
 
 Base.metadata.create_all(bind=engine)
 
